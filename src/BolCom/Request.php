@@ -38,7 +38,7 @@ class Request
 
         $headers = $httpMethod . " " . $url . $parameters . " HTTP/1.0\r\n";
         if(! $this->legacyApiToken) {
-            $headers .= "Authorization: Bearer {$this->token}'\r\n";
+            $headers .= "Authorization: Bearer {$this->token}\r\n";
         }
         $headers .= "Content-type: " . $contentType . "\r\n";
         $headers .= "Host: api.bol.com\r\n";
