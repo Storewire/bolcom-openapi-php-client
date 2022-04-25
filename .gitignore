@@ -3,3 +3,5 @@
 thumbs.db
 .idea
 .nbproject
+.phpunit.result.cache
+composer.lock

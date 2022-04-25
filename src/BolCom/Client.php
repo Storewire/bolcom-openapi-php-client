@@ -4,55 +4,58 @@ namespace BolCom;
 
 class Client
 {
-    private $requestHelper;
-    private $fullResponse;
+    private Request $request;
 
-    public function __construct($accessKeyId = NULL, $responseFormat = NULL, $debugMode = NULL)
+    /**
+     * @param $token string Bol.com Open API access token
+     * @param $useLegacyKey bool Use the legacy bol.com Open API token
+     */
+    public function __construct(string $token, bool $useLegacyKey = false)
     {
-        $this->requestHelper = new Request($accessKeyId, $responseFormat, $debugMode);
+        $this->request = new Request($token, $useLegacyKey);
     }
 
     public function getPingResponse()
     {
-        $httpResponse = $this->requestHelper->fetch('GET', '/utils/v4/ping/');
+        $httpResponse = $this->request->fetch('GET', '/utils/v4/ping/');
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function getProduct($id, $queryParams = '')
     {
-        $httpResponse = $this->requestHelper->fetch('GET', '/catalog/v4/products/' . $id . '/', $queryParams);
+        $httpResponse = $this->request->fetch('GET', '/catalog/v4/products/' . $id . '/', $queryParams);
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function getRecommendations($id, $queryParams = '')
     {
-        $httpResponse = $this->requestHelper->fetch('GET', '/catalog/v4/recommendations/' . $id . '/', $queryParams);
+        $httpResponse = $this->request->fetch('GET', '/catalog/v4/recommendations/' . $id . '/', $queryParams);
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function getRelatedProducts($id, $queryParams = '')
     {
-        $httpResponse = $this->requestHelper->fetch('GET', '/catalog/v4/relatedproducts/' . $id . '/', $queryParams);
+        $httpResponse = $this->request->fetch('GET', '/catalog/v4/relatedproducts/' . $id . '/', $queryParams);
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function getOffer($id, $queryParams = '')
     {
-        $httpResponse = $this->requestHelper->fetch('GET', '/catalog/v4/offers/' . $id . '/', $queryParams);
+        $httpResponse = $this->request->fetch('GET', '/catalog/v4/offers/' . $id . '/', $queryParams);
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
@@ -105,9 +108,9 @@ class Client
             $queryParams .= $separator . 'listId=' . urlencode($listId);
             $separator = '&';
         }
-        $httpResponse = $this->requestHelper->fetch('GET', '/catalog/v4/lists/', $queryParams);
+        $httpResponse = $this->request->fetch('GET', '/catalog/v4/lists/', $queryParams);
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
@@ -164,27 +167,27 @@ class Client
             $separator = ',';
         }
 
-        $httpResponse = $this->requestHelper->fetch('GET', '/catalog/v4/search/', $queryParams);
+        $httpResponse = $this->request->fetch('GET', '/catalog/v4/search/', $queryParams);
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function addToBasket($id, $quantity = 0, $ipAddress = 0)
     {
-        $httpResponse = $this->requestHelper->fetch('POST', '/checkout/v4/baskets/' . $id . '/' . $quantity . '/' . $ipAddress);
+        $httpResponse = $this->request->fetch('POST', '/checkout/v4/baskets/' . $id . '/' . $quantity . '/' . $ipAddress);
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function getBasket()
     {
-        $httpResponse = $this->requestHelper->fetch('GET', '/checkout/v4/baskets/');
+        $httpResponse = $this->request->fetch('GET', '/checkout/v4/baskets/');
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
 
         return $httpResponse;
@@ -192,18 +195,18 @@ class Client
 
     public function updateQuantityBasket($basketItemId, $quantity)
     {
-        $httpResponse = $this->requestHelper->fetch('PUT', '/checkout/v4/baskets/' . $basketItemId . '/' . $quantity . '/');
+        $httpResponse = $this->request->fetch('PUT', '/checkout/v4/baskets/' . $basketItemId . '/' . $quantity . '/');
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function removeFromBasket($basketItemId)
     {
-        $httpResponse = $this->requestHelper->fetch('DELETE', '/checkout/v4/baskets/' . $basketItemId . '/');
+        $httpResponse = $this->request->fetch('DELETE', '/checkout/v4/baskets/' . $basketItemId . '/');
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
@@ -211,45 +214,45 @@ class Client
 
     public function getAuthToken($successUrl = null, $errorUrl = null)
     {
-        $httpResponse = $this->requestHelper->fetch('POST', '/accounts/v4/authtokens', '?successurl=' . $successUrl . '&errorurl=' . $errorUrl);
+        $httpResponse = $this->request->fetch('POST', '/accounts/v4/authtokens', '?successurl=' . $successUrl . '&errorurl=' . $errorUrl);
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function getlogin($privatetoken = null)
     {
-        $httpResponse = $this->requestHelper->fetch('POST', '/accounts/v4/login', '?privatetoken=' . $privatetoken);
+        $httpResponse = $this->request->fetch('POST', '/accounts/v4/login', '?privatetoken=' . $privatetoken);
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function getWishlist()
     {
-        $httpResponse = $this->requestHelper->fetch('GET', '/accounts/v4/wishlists/');
+        $httpResponse = $this->request->fetch('GET', '/accounts/v4/wishlists/');
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function postWishlist($productId)
     {
-        $httpResponse = $this->requestHelper->fetch('POST', '/accounts/v4/wishlists/' . $productId . '/');
+        $httpResponse = $this->request->fetch('POST', '/accounts/v4/wishlists/' . $productId . '/');
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function deleteWishlist($wishListItemId)
     {
-        $httpResponse = $this->requestHelper->fetch('DELETE', '/accounts/v4/wishlists/' . $wishListItemId . '/');
+        $httpResponse = $this->request->fetch('DELETE', '/accounts/v4/wishlists/' . $wishListItemId . '/');
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
@@ -264,30 +267,30 @@ class Client
 
     public function setReferrer($referrerCode = null)
     {
-        $httpResponse = $this->requestHelper->fetch('PUT', '/checkout/v4/referrers/' . $referrerCode . '/');
+        $httpResponse = $this->request->fetch('PUT', '/checkout/v4/referrers/' . $referrerCode . '/');
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function setSessionId($sessionid)
     {
-        $this->requestHelper->setSessionId($sessionid);
+        $this->request->setSessionId($sessionid);
     }
 
     public function getSessionId()
     {
-        $httpResponse = $this->requestHelper->fetch('GET', '/accounts/v4/sessions/');
+        $httpResponse = $this->request->fetch('GET', '/accounts/v4/sessions/');
 
-        if (!$httpResponse) $httpResponse = $this->requestHelper->getFullHeader();
+        if (!$httpResponse) $httpResponse = $this->request->getFullHeader();
 
         return $httpResponse;
     }
 
     public function getFullHeader()
     {
-        return $this->requestHelper->getFullHeader();
+        return $this->request->getFullHeader();
     }
 
 }

@@ -1,0 +1,35 @@
+name: Main pipeline
+on: [push, pull_request]
+jobs:
+  Tests:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        php-versions: ['8.0', '8.1']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --dev
+
+      - name: Run tests
+        run: composer test
+        env:
+          BOLCOM_OPEN_API_KEY: ${{ secrets.BOLCOM_OPEN_API_KEY }}

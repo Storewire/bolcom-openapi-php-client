@@ -7,18 +7,12 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         stopOnFailure="true"
-         syntaxCheck="false">
+         stopOnFailure="true">
     <testsuites>
         <testsuite name="Bol.com Open API Tests">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
     <php>
         <env name="APP_KEY" value="YOUR_APP_KEY"/>
     </php>
